@@ -1,35 +1,19 @@
-// Navbar scroll effect
-const navbar = document.getElementById('navbar');
-const scrollTop = document.getElementById('scrollTop');
-
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-        scrollTop.classList.add('active');
-    } else {
-        navbar.classList.remove('scrolled');
-        scrollTop.classList.remove('active');
-    }
-});
-
-// Mobile menu toggle
+// Mobile Menu Toggle
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('navMenu');
 
 hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
     navMenu.classList.toggle('active');
 });
 
-// Close mobile menu when clicking on a link
+// Close menu when clicking on links
 document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
-        hamburger.classList.remove('active');
         navMenu.classList.remove('active');
     });
 });
 
-// Smooth scroll for anchor links
+// Smooth Scroll
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -43,7 +27,17 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Scroll to top button
+// Scroll to Top Button
+const scrollTop = document.getElementById('scrollTop');
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+        scrollTop.classList.add('show');
+    } else {
+        scrollTop.classList.remove('show');
+    }
+});
+
 scrollTop.addEventListener('click', () => {
     window.scrollTo({
         top: 0,
@@ -51,31 +45,30 @@ scrollTop.addEventListener('click', () => {
     });
 });
 
-// Active nav link on scroll
+// Active Nav Link on Scroll
 const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
 
-function activateNavLink() {
-    let scrollY = window.pageYOffset;
+window.addEventListener('scroll', () => {
+    let current = '';
 
-    sections.forEach(current => {
-        const sectionHeight = current.offsetHeight;
-        const sectionTop = current.offsetTop - 100;
-        const sectionId = current.getAttribute('id');
-
-        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${sectionId}`) {
-                    link.classList.add('active');
-                }
-            });
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (window.scrollY >= (sectionTop - 100)) {
+            current = section.getAttribute('id');
         }
     });
-}
 
-window.addEventListener('scroll', activateNavLink);
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+            link.classList.add('active');
+        }
+    });
+});
 
-// Contact form submission
+// Contact Form WhatsApp Integration
 const contactForm = document.getElementById('contactForm');
 
 contactForm.addEventListener('submit', (e) => {
@@ -86,47 +79,10 @@ contactForm.addEventListener('submit', (e) => {
     const phone = document.getElementById('phone').value;
     const message = document.getElementById('message').value;
 
-    // Create WhatsApp message
-    const whatsappMessage = `*New Contact Form Submission*%0A%0A*Name:* ${name}%0A*Email:* ${email}%0A*Phone:* ${phone}%0A*Message:* ${message}`;
+    const whatsappMessage = `*New Contact Form Message*%0A%0A*Name:* ${name}%0A*Email:* ${email}%0A*Phone:* ${phone}%0A*Message:* ${message}`;
 
-    // Open WhatsApp
     window.open(`https://wa.me/919381034732?text=${whatsappMessage}`, '_blank');
 
-    // Reset form
     contactForm.reset();
-
-    // Show success message
     alert('Thank you! Your message will be sent via WhatsApp.');
-});
-
-// Animate elements on scroll
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, observerOptions);
-
-// Observe all cards and sections
-document.querySelectorAll('.glass-card, .feature-item, .hero-text').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'all 0.6s ease';
-    observer.observe(el);
-});
-
-// Add loading animation
-window.addEventListener('load', () => {
-    document.body.style.opacity = '0';
-    setTimeout(() => {
-        document.body.style.transition = 'opacity 0.5s';
-        document.body.style.opacity = '1';
-    }, 100);
 });
