@@ -3,424 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kavitha Lab Glass Works | KLGW</title>
-    <style>
-        /* --- CSS VARIABLES & RESET --- */
-        :root {
-            --primary: #00bcd4; /* Cyan/Glass color */
-            --dark: #0f172a;
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            --text-light: #f1f5f9;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Deep ocean/lab dark theme */
-            color: var(--text-light);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* --- GLASSMORPHISM UTILITIES --- */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            box-shadow: var(--glass-shadow);
-        }
-
-        .btn-glass {
-            background: rgba(0, 188, 212, 0.2);
-            border: 1px solid var(--primary);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(4px);
-            font-weight: bold;
-        }
-
-        .btn-glass:hover {
-            background: var(--primary);
-            color: #000;
-            box-shadow: 0 0 15px var(--primary);
-        }
-
-        /* --- LAYOUT --- */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
-        }
-        
-        .logo span { color: white; }
-
-        .cart-icon {
-            position: relative;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        .cart-count {
-            position: absolute;
-            top: -8px;
-            right: -10px;
-            background: red;
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 50%;
-        }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-            background: url('https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
-            position: relative;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.6); /* Dark overlay */
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-            padding: 40px;
-        }
-
-        h1 { font-size: 3rem; margin-bottom: 10px; }
-        h2 { font-size: 1.2rem; color: var(--primary); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
-        .hero p { margin-bottom: 30px; font-size: 1.1rem; opacity: 0.9; }
-
-        /* --- PRODUCTS GRID --- */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 80px 20px;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-            font-size: 2.5rem;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-
-        .product-card {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .product-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .product-title { font-size: 1.2rem; margin-bottom: 5px; font-weight: bold; }
-        .product-cat { font-size: 0.9rem; color: #ccc; margin-bottom: 15px; }
-
-        /* --- CONTACT & FOOTER --- */
-        .contact-section {
-            padding: 60px 20px;
-            text-align: center;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .info-box p { margin: 5px 0; }
-        .highlight { color: var(--primary); font-weight: bold; }
-
-        footer {
-            background: rgba(0,0,0,0.8);
-            padding: 20px;
-            text-align: center;
-            font-size: 0.9rem;
-            border-top: 1px solid var(--glass-border);
-        }
-
-        .thosho-credit {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        /* --- CART MODAL --- */
-        #cart-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .cart-content {
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 30px;
-            position: relative;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .remove-btn { color: red; cursor: pointer; margin-left: 10px; }
-        
-        .whatsapp-btn {
-            background: #25D366;
-            border: none;
-            color: white;
-            width: 100%;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            margin-top: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .whatsapp-btn:hover { background: #20bd5a; }
-
-        .close-modal {
-            position: absolute;
-            top: 15px; right: 20px;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2rem; }
-            .hero { height: 60vh; }
-        }
-    </style>
+    <meta name="description" content="Kavitha Lab Glass Works - Premium Laboratory & Industrial Glassware Manufacturer in Chennai">
+    <title>Kavitha Lab Glass Works | Premium Laboratory Glassware</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <header class="glass-panel">
-        <div class="logo">KLGW <span>Glass Works</span></div>
-        <div class="cart-icon" onclick="toggleCart()">
-            🛒 Cart <span class="cart-count" id="cart-count">0</span>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-flask"></i>
+                <span>KLGW</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#products" class="nav-link">Products</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
-    </header>
+    </nav>
 
-    <section class="hero">
-        <div class="hero-content glass-panel">
-            <h2>Proprietor: Govindaraj</h2>
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="container">
             <h1>Kavitha Lab Glass Works</h1>
-            <p>Premier Manufacturer of Laboratory Glassware, Instruments, Teflon Ware & Industrial Borosilicate Glass.</p>
-            <button class="btn-glass" onclick="document.getElementById('products').scrollIntoView()">View Products</button>
+            <p>Premium Laboratory & Industrial Glassware Since 1967</p>
+            <div class="hero-buttons">
+                <a href="#products" class="btn btn-primary">Our Products</a>
+                <a href="#contact" class="btn btn-secondary">Contact Us</a>
+            </div>
         </div>
     </section>
 
-    <section id="products" class="container">
-        <h2 class="section-title">Our Catalogue</h2>
-        <div class="product-grid" id="product-list">
+    <!-- About -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2>About Us</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Leading Manufacturer Since 1967</h3>
+                    <p>Founded by Proprietor Govindaraj, Kavitha Lab Glass Works has been manufacturing premium quality laboratory and industrial glassware in Chennai for over 55 years.</p>
+                    <p>We specialize in borosilicate glassware, teflon ware, and industrial glass products that meet international standards.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat">
+                        <i class="fas fa-award"></i>
+                        <h4>55+ Years</h4>
+                        <p>Experience</p>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-users"></i>
+                        <h4>500+</h4>
+                        <p>Happy Clients</p>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-check-circle"></i>
+                        <h4>Premium</h4>
+                        <p>Quality</p>
+                    </div>
+                </div>
             </div>
+        </div>
     </section>
 
-    <section class="container contact-section">
-        <div class="glass-panel" style="padding: 40px;">
-            <h2 class="section-title" style="margin-bottom: 20px;">Contact Us</h2>
-            
+    <!-- Products -->
+    <section class="products" id="products">
+        <div class="container">
+            <h2>Our Products</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <i class="fas fa-flask"></i>
+                    <h3>Laboratory Glassware</h3>
+                    <p>Beakers, flasks, test tubes, burettes, measuring cylinders</p>
+                </div>
+                <div class="product-card">
+                    <i class="fas fa-microscope"></i>
+                    <h3>Lab Instruments</h3>
+                    <p>Thermometers, hydrometers, desiccators, accessories</p>
+                </div>
+                <div class="product-card">
+                    <i class="fas fa-atom"></i>
+                    <h3>Teflon Ware</h3>
+                    <p>PTFE products for chemical resistance applications</p>
+                </div>
+                <div class="product-card">
+                    <i class="fas fa-industry"></i>
+                    <h3>Industrial Glass</h3>
+                    <p>Reactor vessels, columns, heat exchangers</p>
+                </div>
+                <div class="product-card">
+                    <i class="fas fa-glasses"></i>
+                    <h3>Borosilicate Glass</h3>
+                    <p>High temperature and chemical resistant products</p>
+                </div>
+                <div class="product-card">
+                    <i class="fas fa-ruler"></i>
+                    <h3>Tubing & Rods</h3>
+                    <p>Glass tubes and rods in various sizes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2>Contact Us</h2>
             <div class="contact-grid">
-                <div class="info-box">
-                    <h3>Address</h3>
-                    <p>Plot No.11, Annal Gandhi Nagar Main Road,</p>
-                    <p>Behind Municipality Office,</p>
-                    <p>Anakaputhur, Chennai-70</p>
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Address</h4>
+                            <p>Plot No.11, Annal Gandhi Nagar Main Road<br>Behind Municipality Office<br>Anakaputhur, Chennai - 70</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Phone</h4>
+                            <p><a href="tel:+919381034732">+91 9381034732</a></p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p><a href="mailto:kavithaglass1967@gmail.com">kavithaglass1967@gmail.com</a></p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-id-card"></i>
+                        <div>
+                            <h4>GSTIN</h4>
+                            <p>33AQPG7384C1Z3</p>
+                        </div>
+                    </div>
+                    <a href="https://wa.me/919381034732" class="whatsapp-btn">
+                        <i class="fab fa-whatsapp"></i> WhatsApp Us
+                    </a>
                 </div>
-                <div class="info-box">
-                    <h3>Get in Touch</h3>
-                    <p>Mobile: <span class="highlight">+91 9381034732</span></p>
-                    <p>Email: kavithaglass1967@gmail.com</p>
-                    <br>
-                    <p style="font-size: 0.9rem; opacity: 0.7;">GSTIN: 33AQPG7384C1Z3</p>
-                </div>
+                <form class="contact-form" id="contactForm">
+                    <h3>Send Message</h3>
+                    <input type="text" id="name" placeholder="Your Name" required>
+                    <input type="email" id="email" placeholder="Your Email" required>
+                    <input type="tel" id="phone" placeholder="Your Phone" required>
+                    <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
+                    <button type="submit" class="btn btn-primary">Send via WhatsApp</button>
+                </form>
             </div>
         </div>
     </section>
 
-    <footer>
-        <p>&copy; 2024 Kavitha Lab Glass Works. All Rights Reserved.</p>
-        <p>Designed by <a href="#" class="thosho-credit">Thosho Tech</a></p>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Kavitha Lab Glass Works. All rights reserved.</p>
+            <p>Proprietor: Govindaraj | GSTIN: 33AQPG7384C1Z3</p>
+            <p>Designed by <a href="https://thosho.github.io/" target="_blank">Thosho Tech</a></p>
+        </div>
     </footer>
 
-    <div id="cart-modal">
-        <div class="cart-content glass-panel">
-            <span class="close-modal" onclick="toggleCart()">&times;</span>
-            <h2>Your Order Inquiry</h2>
-            <div id="cart-items" style="margin-top: 20px;">
-                <p>Your cart is empty.</p>
-            </div>
-            
-            <button class="whatsapp-btn" onclick="checkout()">
-                <span>📱 Place Order via WhatsApp</span>
-            </button>
-        </div>
-    </div>
+    <button class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
-    <script>
-        // --- DATA ---
-        const products = [
-            { id: 1, name: "Borosilicate Beaker Set", category: "Laboratory Glassware", image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=400&q=80" },
-            { id: 2, name: "Volumetric Flasks", category: "Laboratory Glassware", image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=400&q=80" },
-            { id: 3, name: "Test Tubes & Rack", category: "Tubing & Rodding", image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=400&q=80" },
-            { id: 4, name: "Condenser Coil", category: "Industrial Glassware", image: "https://plus.unsplash.com/premium_photo-1676325102583-0839e57d7a1f?auto=format&fit=crop&w=400&q=80" },
-            { id: 5, name: "Teflon Stirrer/Stopper", category: "Teflon Ware", image: "https://images.unsplash.com/photo-1628863353691-0071c8c1874c?auto=format&fit=crop&w=400&q=80" },
-            { id: 6, name: "Petri Dishes", category: "Laboratory Instruments", image: "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=400&q=80" },
-            { id: 7, name: "Glass Tubing (Custom)", category: "Tubing & Rodding", image: "https://images.unsplash.com/photo-1530982011887-3cc11cc85693?auto=format&fit=crop&w=400&q=80" },
-            { id: 8, name: "Pipettes & Burettes", category: "Laboratory Glassware", image: "https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=400&q=80" }
-        ];
-
-        let cart = [];
-        const phone = "919381034732"; 
-
-        // --- RENDER PRODUCTS ---
-        const productContainer = document.getElementById('product-list');
-
-        function renderProducts() {
-            productContainer.innerHTML = products.map(product => `
-                <div class="product-card glass-panel">
-                    <img src="${product.image}" alt="${product.name}" class="product-img">
-                    <div class="product-title">${product.name}</div>
-                    <div class="product-cat">${product.category}</div>
-                    <button class="btn-glass" onclick="addToCart(${product.id})">Add to Inquiry</button>
-                </div>
-            `).join('');
-        }
-
-        // --- CART LOGIC ---
-        function addToCart(id) {
-            const product = products.find(p => p.id === id);
-            cart.push(product);
-            updateCartUI();
-            alert(`${product.name} added to cart!`);
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.length;
-            
-            const cartItemsContainer = document.getElementById('cart-items');
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
-            } else {
-                cartItemsContainer.innerHTML = cart.map((item, index) => `
-                    <div class="cart-item">
-                        <span>${item.name}</span>
-                        <span class="remove-btn" onclick="removeFromCart(${index})">Remove</span>
-                    </div>
-                `).join('');
-            }
-        }
-
-        function toggleCart() {
-            const modal = document.getElementById('cart-modal');
-            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
-        }
-
-        // --- WHATSAPP CHECKOUT ---
-        function checkout() {
-            if (cart.length === 0) {
-                alert("Please add items to your cart first.");
-                return;
-            }
-
-            let message = "Hello KLGW, I would like to inquire about/order the following items:%0a%0a";
-            cart.forEach((item, index) => {
-                message += `${index + 1}. ${item.name} (${item.category})%0a`;
-            });
-
-            message += "%0aPlease provide the quotation.%0a(Sent via Website)";
-            
-            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
-        }
-
-        // Initialize
-        renderProducts();
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('cart-modal');
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
