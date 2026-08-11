@@ -29,8 +29,9 @@ export const CartProvider = ({ children }) => {
     setIsQuoteOpen(true);
   };
 
-  const removeFromCart = (id) => {
-    setQuoteItems(prev => prev.filter(item => item.id !== id));
+  // Fix: remove by cartKey so different sizes can be removed independently
+  const removeFromCart = (cartKey) => {
+    setQuoteItems(prev => prev.filter(item => (item.cartKey || item.id) !== cartKey));
   };
 
   const clearQuote = () => setQuoteItems([]);

@@ -34,16 +34,16 @@ function VaporKLGW() {
   const ORBIT_DUR = 32;
   const letters = [
     { char: 'K', fraction: 0,    pulse: 0   },
-    { char: 'L', fraction: 0.25, pulse: 2.0 },
-    { char: 'G', fraction: 0.5,  pulse: 4.0 },
-    { char: 'W', fraction: 0.75, pulse: 6.0 },
+    { char: 'L', fraction: 0.25, pulse: 0   },
+    { char: 'G', fraction: 0.5,  pulse: 0   },
+    { char: 'W', fraction: 0.75, pulse: 0   },
   ];
 
   return (
     <div style={{ position: 'relative', width: 180, height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
 
-      {/* Orbiting ghost letters — outer div rotates around centre, inner div stays upright via same-speed counter-rotate */}
-      {letters.map(({ char, fraction, pulse }) => (
+      {/* Orbiting ghost letters */}
+      {letters.map(({ char, fraction }) => (
         <div
           key={char}
           style={{
@@ -52,14 +52,17 @@ function VaporKLGW() {
             animation: `klgw-orbit ${ORBIT_DUR}s ${-fraction * ORBIT_DUR}s linear infinite`,
           }}
         >
+          {/* Inner: counter-rotates so letter stays upright.
+              Uses klgw-color animation to flash green as letter
+              passes the "front" of the tube (near top of circle = 0° position) */}
           <div style={{
             transform: 'translate(-50%, -50%)',
-            animation: `klgw-pulse 8s ${pulse}s ease-in-out infinite`,
             fontFamily: "'Space Grotesk', sans-serif",
             fontSize: '1.5rem', fontWeight: 900,
-            color: 'rgba(0,212,255,1)',
-            filter: 'blur(0.5px) drop-shadow(0 0 8px rgba(0,212,255,0.9))',
             pointerEvents: 'none', userSelect: 'none',
+            /* Two animations: opacity ghost pulse + green color flash at tube edge */
+            animation: `klgw-ghost-opacity ${ORBIT_DUR}s ${-fraction * ORBIT_DUR}s linear infinite,
+                        klgw-green-flash    ${ORBIT_DUR}s ${-fraction * ORBIT_DUR}s linear infinite`,
           }}>
             {char}
           </div>
@@ -92,16 +95,37 @@ function VaporKLGW() {
       </div>
 
       <style>{`
-        /* rotate wrapper around centre, translateX moves it to orbit radius */
+        /* Orbital motion */
         @keyframes klgw-orbit {
           from { transform: rotate(0deg)   translateX(${R}px) rotate(0deg);    }
           to   { transform: rotate(360deg) translateX(${R}px) rotate(-360deg); }
         }
-        /* Ghost pulse: very low opacity, appears and fades slowly */
-        @keyframes klgw-pulse {
-          0%, 15%, 85%, 100% { opacity: 0;    }
-          40%, 60%           { opacity: 0.21; }
+
+        /*
+         * Opacity: letter is a ghost (opacity 0.05–0.18) most of the time.
+         * It peaks at 0.22 opacity when at the "far" side of the orbit,
+         * and drops to near-zero when passing in front of the tube.
+         * The brief high-opacity + green color = it "lights up" at the tube.
+         *
+         * The orbit goes 0→360°. We put the green flash at ~0%/100% (the
+         * exact front position), keeping mid-cycle dim.
+         */
+        @keyframes klgw-ghost-opacity {
+          0%          { opacity: 0.85; }   /* at tube edge — fully visible */
+          5%          { opacity: 0.15; }   /* quickly fades after passing tube */
+          45%, 55%    { opacity: 0.18; }   /* dim on the far side */
+          95%         { opacity: 0.15; }   /* approaching tube again */
+          100%        { opacity: 0.85; }   /* at tube edge again */
         }
+
+        /* Color flashes bright green (#00ff88) at tube edge, cyan elsewhere */
+        @keyframes klgw-green-flash {
+          0%          { color: #00ff88; filter: blur(0px) drop-shadow(0 0 14px #00ff88) drop-shadow(0 0 28px rgba(0,255,136,0.7)); }
+          4%          { color: #00d4ff; filter: blur(0.5px) drop-shadow(0 0 6px rgba(0,212,255,0.5)); }
+          96%         { color: #00d4ff; filter: blur(0.5px) drop-shadow(0 0 6px rgba(0,212,255,0.5)); }
+          100%        { color: #00ff88; filter: blur(0px) drop-shadow(0 0 14px #00ff88) drop-shadow(0 0 28px rgba(0,255,136,0.7)); }
+        }
+
         @keyframes klgw-wisp {
           0%, 100% { opacity: 0;    transform: translate(-50%,-50%) scale(1); }
           50%      { opacity: 0.28; transform: translate(-50%,-50%) scale(2); }
@@ -116,6 +140,7 @@ function VaporKLGW() {
 }
 
 /* ── Orbital atom visual — single ring, badges 120° apart ── */
+
 function AtomVisual() {
   // All 3 on ONE ring → guaranteed no overlap, always 120° apart
   const ORBIT_R = 175;
@@ -128,7 +153,7 @@ function AtomVisual() {
   const DURATION = 18; // all badges share same orbital period
 
   return (
-    <div style={{
+    <div className="hero-visual-wrap" style={{
       position: 'relative',
       width: 480, height: 480,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
