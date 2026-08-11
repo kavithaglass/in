@@ -82,7 +82,9 @@ export default function Footer() {
             </p>
           </div>
           <div style={{ display: 'flex', gap: 16 }}>
-            <p className="footer-copy">Est. 1993 · Chennai, India</p>
+            <p className="footer-copy">
+              Designed & Maintained by <a href="https://thoshotech.com" target="_blank" rel="noreferrer" style={{ color: 'var(--cyan)', textDecoration: 'none' }}>Thoshi Tech</a>
+            </p>
           </div>
         </div>
       </div>

@@ -23,10 +23,17 @@ export const CartProvider = ({ children }) => {
     const key = product.cartKey || `${product.id}-${product.selectedSize || 'default'}`;
     setQuoteItems(prev => {
       const existing = prev.find(item => (item.cartKey || item.id) === key);
-      if (existing) return prev; // already in list
-      return [...prev, { ...product, cartKey: key }];
+      if (existing) {
+        return prev.map(item => (item.cartKey || item.id) === key ? { ...item, quantity: (item.quantity || 1) + (product.quantity || 1) } : item);
+      }
+      return [...prev, { ...product, cartKey: key, quantity: product.quantity || 1 }];
     });
     setIsQuoteOpen(true);
+  };
+
+  const updateQuantity = (cartKey, newQuantity) => {
+    if (newQuantity < 1) return;
+    setQuoteItems(prev => prev.map(item => (item.cartKey || item.id) === cartKey ? { ...item, quantity: newQuantity } : item));
   };
 
   // Fix: remove by cartKey so different sizes can be removed independently
@@ -38,7 +45,7 @@ export const CartProvider = ({ children }) => {
 
   // Aliases so existing components don't break
   const cartItems = quoteItems;
-  const cartCount = quoteItems.length;
+  const cartCount = quoteItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
   const isCartOpen = isQuoteOpen;
   const setIsCartOpen = setIsQuoteOpen;
 
@@ -47,6 +54,7 @@ export const CartProvider = ({ children }) => {
       quoteItems,
       cartItems,
       addToCart,
+      updateQuantity,
       removeFromCart,
       clearQuote,
       isQuoteOpen,

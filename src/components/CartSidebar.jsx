@@ -19,14 +19,14 @@ function QuoteItemImage() {
 export default function CartSidebar() {
   const {
     isQuoteOpen, setIsQuoteOpen,
-    quoteItems, removeFromCart, clearQuote,
+    quoteItems, removeFromCart, clearQuote, updateQuantity
   } = useCart();
 
   // Build mailto body from quote items
   const buildMailtoLink = () => {
     const subject = encodeURIComponent('Product Quotation Request — Kavitha Lab Glass Works');
     const lines = quoteItems.map((item, i) =>
-      `${i + 1}. ${item.name}\n   Size/Variant: ${item.selectedSize || 'Please advise'}\n   SKU: ${item.sku}\n   Category: ${item.category}\n   Material: ${item.material || 'Borosilicate 3.3'}\n   Standard: ${item.standard || 'IS Standard'}`
+      `${i + 1}. ${item.name}\n   Quantity: ${item.quantity || 1}\n   Size/Variant: ${item.selectedSize || 'Please advise'}\n   SKU: ${item.sku}\n   Category: ${item.category}\n   Material: ${item.material || 'Borosilicate 3.3'}\n   Standard: ${item.standard || 'IS Standard'}`
     ).join('\n\n');
     const body = encodeURIComponent(
       `Hello Kavitha Lab Glass Works,\n\nI would like to request a quotation for the following products:\n\n${lines}\n\n---\nPlease share pricing, lead time, and availability for the above items.\n\nThank you.`
@@ -34,9 +34,24 @@ export default function CartSidebar() {
     return `mailto:kavithaglass1967@gmail.com?subject=${subject}&body=${body}`;
   };
 
-  const handleSendQuote = () => {
+  const buildWhatsappLink = () => {
+    const lines = quoteItems.map((item, i) =>
+      `${i + 1}. *${item.name}*\n   Qty: ${item.quantity || 1}\n   Size: ${item.selectedSize || 'Please advise'}\n   SKU: ${item.sku}`
+    ).join('\n\n');
+    const body = encodeURIComponent(
+      `Hello Kavitha Lab Glass Works,\n\nI would like to request a quotation for the following products:\n\n${lines}\n\nPlease share pricing, lead time, and availability. Thank you.`
+    );
+    return `https://wa.me/919381034732?text=${body}`;
+  };
+
+  const handleSendEmail = () => {
     if (quoteItems.length === 0) return;
     window.location.href = buildMailtoLink();
+  };
+
+  const handleSendWhatsapp = () => {
+    if (quoteItems.length === 0) return;
+    window.open(buildWhatsappLink(), '_blank');
   };
 
   return (
@@ -96,7 +111,7 @@ export default function CartSidebar() {
             borderRadius: 10, fontSize: '0.76rem', color: 'var(--text-2)', lineHeight: 1.6,
           }}>
             <span style={{ color: 'var(--cyan)', fontWeight: 600 }}>How this works: </span>
-            Click <strong style={{ color: 'var(--text-1)' }}>"Send Quote Request"</strong> below — your email app will open pre-filled. We reply within 24 hours with pricing.
+            Adjust quantities if needed, then choose <strong style={{ color: 'var(--text-1)' }}>WhatsApp or Email</strong> below to send your request.
           </div>
         )}
 
@@ -135,7 +150,21 @@ export default function CartSidebar() {
                   </div>
 
                   <div style={{ fontSize: '0.68rem', color: 'var(--cyan)', fontWeight: 600 }}>{item.category}</div>
-                  <div style={{ fontSize: '0.64rem', color: 'var(--text-3)', fontFamily: 'monospace', marginTop: 2 }}>{item.sku}</div>
+                  <div style={{ fontSize: '0.64rem', color: 'var(--text-3)', fontFamily: 'monospace', marginTop: 2, marginBottom: 8 }}>{item.sku}</div>
+                  
+                  {/* Quantity Controls */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontSize: '0.68rem', color: 'var(--text-3)' }}>Qty:</span>
+                    <button 
+                      onClick={() => updateQuantity(item.cartKey || item.id, Math.max(1, (item.quantity || 1) - 1))}
+                      style={{ width: 24, height: 24, borderRadius: 4, background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', cursor: 'pointer' }}
+                    >-</button>
+                    <span style={{ fontSize: '0.85rem', fontWeight: 600, minWidth: '20px', textAlign: 'center' }}>{item.quantity || 1}</span>
+                    <button 
+                      onClick={() => updateQuantity(item.cartKey || item.id, (item.quantity || 1) + 1)}
+                      style={{ width: 24, height: 24, borderRadius: 4, background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', cursor: 'pointer' }}
+                    >+</button>
+                  </div>
                 </div>
 
                 {/* Remove — now uses cartKey */}
@@ -169,20 +198,35 @@ export default function CartSidebar() {
             }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-3)', marginBottom: 4 }}>Products in your request:</div>
               <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.35rem', fontWeight: 700, color: 'var(--text-1)' }}>
-                {quoteItems.length} {quoteItems.length === 1 ? 'Item' : 'Items'}
+                {quoteItems.length} {quoteItems.length === 1 ? 'Item' : 'Items'} 
+                <span style={{ fontSize: '0.9rem', color: 'var(--text-3)', fontWeight: 400, marginLeft: 8 }}>(Total Qty: {quoteItems.reduce((acc, item) => acc + (item.quantity || 1), 0)})</span>
               </div>
               <div style={{ fontSize: '0.7rem', color: 'var(--text-3)', marginTop: 4 }}>
-                Pricing shared via email · No obligation
+                Pricing shared via Email or WhatsApp · No obligation
               </div>
             </div>
 
-            <button className="checkout-btn" onClick={handleSendQuote}>
-              📨 Send Quote Request
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button 
+                onClick={handleSendWhatsapp}
+                style={{
+                  width: '100%', padding: '14px', borderRadius: 'var(--radius-md)',
+                  background: '#25D366', color: '#fff', border: 'none', cursor: 'pointer',
+                  fontWeight: 700, fontSize: '0.95rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  transition: 'all 0.2s', boxShadow: '0 4px 14px rgba(37, 211, 102, 0.4)'
+                }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                <span style={{ fontSize: '1.2rem' }}>💬</span> Send via WhatsApp
+              </button>
+              <button className="checkout-btn" onClick={handleSendEmail} style={{ padding: '14px', fontSize: '0.95rem' }}>
+                ✉️ Send via Email
+              </button>
+            </div>
 
-            <p style={{ textAlign: 'center', marginTop: 10, fontSize: '0.72rem', color: 'var(--text-3)', lineHeight: 1.5 }}>
-              Opens your email app pre-filled with all items &amp; sizes.
-              We reply within <strong style={{ color: 'var(--text-2)' }}>24 hours</strong>.
+            <p style={{ textAlign: 'center', marginTop: 14, fontSize: '0.72rem', color: 'var(--text-3)', lineHeight: 1.5 }}>
+              Choose your preferred method. We reply within <strong style={{ color: 'var(--text-2)' }}>24 hours</strong>.
             </p>
           </div>
         )}
