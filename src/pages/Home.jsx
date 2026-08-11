@@ -28,77 +28,87 @@ function Particles() {
   );
 }
 
-/* ── Vapor KLGW from test tube ───────────────────────────── */
+/* ── Ghost KLGW orbiting the test tube ───────────────────── */
 function VaporKLGW() {
-  return (
-    <div style={{ position: 'relative', width: 160, height: 200, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+  const R = 72;
+  const ORBIT_DUR = 32;
+  const letters = [
+    { char: 'K', fraction: 0,    pulse: 0   },
+    { char: 'L', fraction: 0.25, pulse: 2.0 },
+    { char: 'G', fraction: 0.5,  pulse: 4.0 },
+    { char: 'W', fraction: 0.75, pulse: 6.0 },
+  ];
 
-      {/* Vapor letters — K L G W rise from the tube spout, staggered */}
-      {['K', 'L', 'G', 'W'].map((letter, i) => (
+  return (
+    <div style={{ position: 'relative', width: 180, height: 180, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+      {/* Orbiting ghost letters — outer div rotates around centre, inner div stays upright via same-speed counter-rotate */}
+      {letters.map(({ char, fraction, pulse }) => (
         <div
-          key={letter}
+          key={char}
           style={{
             position: 'absolute',
-            bottom: 108,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: '2.6rem',
-            fontWeight: 900,
-            background: 'linear-gradient(180deg, #fff 0%, var(--cyan) 50%, var(--teal) 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            animation: `vapor-rise 4.8s ${i * 1.2}s ease-in infinite`,
-            filter: 'drop-shadow(0 0 14px rgba(0,212,255,0.9))',
-            pointerEvents: 'none',
-            userSelect: 'none',
+            top: '50%', left: '50%',
+            animation: `klgw-orbit ${ORBIT_DUR}s ${-fraction * ORBIT_DUR}s linear infinite`,
           }}
         >
-          {letter}
+          <div style={{
+            transform: 'translate(-50%, -50%)',
+            animation: `klgw-pulse 8s ${pulse}s ease-in-out infinite`,
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '1.5rem', fontWeight: 900,
+            color: 'rgba(0,212,255,1)',
+            filter: 'blur(0.5px) drop-shadow(0 0 8px rgba(0,212,255,0.9))',
+            pointerEvents: 'none', userSelect: 'none',
+          }}>
+            {char}
+          </div>
         </div>
       ))}
 
-      {/* Wisp / smoke particles rising from spout */}
+      {/* Tiny glowing wisp dots */}
       {[...Array(6)].map((_, i) => (
-        <div key={`wisp-${i}`} style={{
-          position: 'absolute',
-          bottom: 120,
-          left: `calc(50% + ${(i % 3 - 1) * 10}px)`,
-          width: 3 + (i % 3),
-          height: 3 + (i % 3),
-          borderRadius: '50%',
-          background: 'rgba(0,212,255,0.5)',
-          animation: `wisp-rise ${2 + i * 0.3}s ${i * 0.4}s ease-out infinite`,
-          pointerEvents: 'none',
-        }} />
+        <div key={`w${i}`} style={{
+          position: 'absolute', top: '50%', left: '50%',
+          animation: `klgw-orbit ${22 + i * 3}s ${-i * 3.5}s linear infinite`,
+        }}>
+          <div style={{
+            transform: 'translate(-50%, -50%)',
+            width: 3, height: 3, borderRadius: '50%',
+            background: 'rgba(0,212,255,0.45)',
+            animation: `klgw-wisp 3.5s ${i * 0.6}s ease-in-out infinite`,
+          }} />
+        </div>
       ))}
 
-      {/* Test tube */}
+      {/* Test tube — glowing green, gently breathing */}
       <div style={{
-        fontSize: '5.5rem',
-        lineHeight: 1,
-        filter: 'drop-shadow(0 0 20px rgba(0,255,120,0.5))',
-        animation: 'tube-sway 4s ease-in-out infinite',
+        position: 'relative', zIndex: 3,
+        fontSize: '5.2rem', lineHeight: 1,
+        animation: 'tube-breathe 4s ease-in-out infinite',
         userSelect: 'none',
       }}>
         🧪
       </div>
 
       <style>{`
-        @keyframes vapor-rise {
-          0%   { transform: translateX(-50%) translateY(0px) scale(0.4); opacity: 0; }
-          12%  { opacity: 1; transform: translateX(-50%) translateY(-10px) scale(1); }
-          75%  { opacity: 0.7; }
-          100% { transform: translateX(-50%) translateY(-110px) scale(0.5); opacity: 0; }
+        /* rotate wrapper around centre, translateX moves it to orbit radius */
+        @keyframes klgw-orbit {
+          from { transform: rotate(0deg)   translateX(${R}px) rotate(0deg);    }
+          to   { transform: rotate(360deg) translateX(${R}px) rotate(-360deg); }
         }
-        @keyframes wisp-rise {
-          0%   { transform: translateY(0) scale(1); opacity: 0.6; }
-          100% { transform: translateY(-70px) scale(0); opacity: 0; }
+        /* Ghost pulse: very low opacity, appears and fades slowly */
+        @keyframes klgw-pulse {
+          0%, 15%, 85%, 100% { opacity: 0;    }
+          40%, 60%           { opacity: 0.21; }
         }
-        @keyframes tube-sway {
-          0%,100% { transform: rotate(-4deg); }
-          50%      { transform: rotate(4deg); }
+        @keyframes klgw-wisp {
+          0%, 100% { opacity: 0;    transform: translate(-50%,-50%) scale(1); }
+          50%      { opacity: 0.28; transform: translate(-50%,-50%) scale(2); }
+        }
+        @keyframes tube-breathe {
+          0%,100% { filter: drop-shadow(0 0 14px rgba(0,255,120,0.5)) drop-shadow(0 0 30px rgba(0,200,80,0.2)); transform: scale(1); }
+          50%     { filter: drop-shadow(0 0 24px rgba(0,255,120,0.85)) drop-shadow(0 0 50px rgba(0,200,80,0.4)); transform: scale(1.05); }
         }
       `}</style>
     </div>
