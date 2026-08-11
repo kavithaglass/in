@@ -285,6 +285,7 @@ button { font-family: inherit; cursor: pointer; border: none; }
   background: linear-gradient(135deg, rgba(0,212,255,0.06) 0%, transparent 100%);
   opacity: 0;
   transition: opacity 0.3s;
+  pointer-events: none;
 }
 .product-card:hover {
   transform: translateY(-8px);
