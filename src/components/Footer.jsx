@@ -83,7 +83,7 @@ export default function Footer() {
           </div>
           <div style={{ display: 'flex', gap: 16 }}>
             <p className="footer-copy">
-              Designed & Maintained by <a href="https://thoshotech.com" target="_blank" rel="noreferrer" style={{ color: 'var(--cyan)', textDecoration: 'none' }}>Thoshi Tech</a>
+              Designed & Maintained by <a href="https://thoshotech.com" target="_blank" rel="noreferrer" style={{ color: 'var(--cyan)', textDecoration: 'none' }}>Thosho Tech</a>
             </p>
           </div>
         </div>
