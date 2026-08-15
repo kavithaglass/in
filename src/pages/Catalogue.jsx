@@ -182,33 +182,7 @@ function ProductModal({ product, onClose, onAdd, addedSizes }) {
             >
               {isAdded ? `✓ ${selectedSize} Added to Quote` : selectedSize ? `📋 Add to Quote — ${selectedSize}` : 'Select a size first'}
             </button>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <a
-                href={`https://wa.me/919381034732?text=${encodeURIComponent('Hello,\n\nI would like to enquire about:\n\n*Product:* ' + product.name + '\n*SKU:* ' + product.sku + '\n*Size:* ' + (selectedSize || 'Not selected') + '\n\nPlease share pricing and availability.')}`}
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  flex: 1, padding: '12px 20px', borderRadius: 12,
-                  background: '#25D366', border: 'none',
-                  color: '#fff', fontWeight: 600, fontSize: '0.875rem', textDecoration: 'none',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.2s',
-                  boxShadow: '0 4px 14px rgba(37, 211, 102, 0.2)'
-                }}
-              >
-                💬 WhatsApp
-              </a>
-              <a
-                href={`mailto:kavithaglass1967@gmail.com?subject=${encodeURIComponent('Enquiry: ' + product.name + ' (' + (selectedSize || 'Not selected') + ')')}&body=${enquiryBody}`}
-                style={{
-                  flex: 1, padding: '12px 20px', borderRadius: 12,
-                  background: 'rgba(255,255,255,0.04)', border: '1px solid var(--glass-border-bright)',
-                  color: 'var(--cyan)', fontWeight: 600, fontSize: '0.875rem', textDecoration: 'none',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, transition: 'all 0.2s'
-                }}
-              >
-                ✉️ Email
-              </a>
-            </div>
+
           </div>
           <p style={{ fontSize: '0.7rem', color: 'var(--text-3)', textAlign: 'center', marginTop: 10 }}>
             No prices shown online · We reply with pricing within 24 hours
@@ -458,24 +432,7 @@ function ProductCard({ product, selectedSize, onSizeSelect, isAdded, onAdd, onCl
           >
             {isAdded ? `✓ ${selectedSize} Added` : '📋 Add to Quote'}
           </button>
-          <div style={{ display: 'flex', gap: 6 }}>
-            <a
-              href={`https://wa.me/919381034732?text=${encodeURIComponent('Hello,\n\nI would like to enquire about:\n\n*Product:* ' + product.name + '\n*SKU:* ' + product.sku + '\n*Size:* ' + selectedSize + '\n\nPlease share pricing and availability.')}`}
-              target="_blank"
-              rel="noreferrer"
-              onClick={e => e.stopPropagation()}
-              style={{ flex: 1, padding: '7px 0', borderRadius: 8, background: '#25D366', color: '#fff', fontSize: '0.74rem', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, transition: 'all 0.2s', border: 'none' }}
-            >
-              💬 WhatsApp
-            </a>
-            <a
-              href={`mailto:kavithaglass1967@gmail.com?subject=${encodeURIComponent('Enquiry: ' + product.name + ' (' + selectedSize + ')')}&body=${encodeURIComponent('Hello,\n\nI would like to enquire about:\n\nProduct: ' + product.name + '\nSKU: ' + product.sku + '\nSelected Size: ' + selectedSize + '\n\nPlease share pricing and availability.\n\nThank you.')}`}
-              onClick={e => e.stopPropagation()}
-              style={{ flex: 1, padding: '7px 0', borderRadius: 8, border: '1px solid var(--glass-border)', color: 'var(--text-3)', fontSize: '0.74rem', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, transition: 'all 0.2s' }}
-            >
-              ✉️ Email
-            </a>
-          </div>
+
         </div>
       </div>
     </div>
